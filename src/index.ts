@@ -21,7 +21,8 @@ const createWindow = (): void => {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       nodeIntegration: false, 
       contextIsolation: true  
-    }
+    },
+    
   };
   AppWindow.createWindow(options);
 
@@ -30,6 +31,7 @@ const createWindow = (): void => {
 
   // Open the DevTools.
   AppWindow.getInstance().webContents.openDevTools();
+  AppWindow.getInstance().removeMenu();
 };
 
 // This method will be called when Electron has finished
@@ -53,21 +55,3 @@ app.on('activate', () => {
     createWindow();
   }
 });
-
-ipcMain.handle('open-file-dialog', async () => {
-  if (!AppWindow.isWindowAvailable()) {
-    throw new Error('Window not ready');
-  }
-  
-  try {
-    return await dialog.showOpenDialog(AppWindow.getInstance(), {
-      properties: ['openFile']
-    });
-  } catch (error) {
-    console.error('Dialog error:', error);
-    throw error;
-  }
-});
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
